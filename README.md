@@ -69,7 +69,7 @@ Both pipelines must be orchestrated and managed using **Apache Airflow** as two 
 
 ### 1️⃣ `yf_stock_price_full_refresh_180d`
 - Fetches stock price data using the yfinance API.  
-- Loads the extracted dataset into a SQL database.  
+- Loads the extracted dataset into snowflake table.  
 - Uses Airflow Variables (`stock_symbol`) and database connection (`snowflake_conn`).  
 - Scheduled to run **daily** (`schedule_interval='@daily'`).  
 
@@ -78,7 +78,7 @@ Both pipelines must be orchestrated and managed using **Apache Airflow** as two 
 - Trains a machine learning model to forecast prices.  
 - Saves predicted results to the forecast table.  
 - Performs a **SQL transaction** to combine ETL and forecasted data into the final table.  
-- Also scheduled to run daily, **after** `yfinance_etl`.
+- Also scheduled to run daily, **after** `dag_snowflake_ml_forecast_7d`.
 
 
 ## 📊 Airflow Web UI

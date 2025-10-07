@@ -15,12 +15,11 @@ Both pipelines must be orchestrated and managed using **Apache Airflow** as two 
 
 - Use **yfinance** API to collect daily stock OHLCV data (Open, High, Low, Close, Volume).  
 - Implement two **Airflow DAGs**:
-  - `yfinance_etl`: Extracts and loads raw stock data.
-  - `yfinance_train`: Trains forecasting model and merges final output.
+  - `yf_stock_price_full_refresh_180d`: Extracts and loads raw stock data.
+  - `dag_snowflake_ml_forecast_7d`: Trains forecasting model and merges final output.
 - Use **Airflow Variables** to configure:
   - `stock_symbol` (e.g., “NVDA ,AAPL”)
-  - `forecast_days` (e.g., 7)
-  - `database_conn_id` (e.g., `postgres_default`)
+  - `airflow_conn` (e.g., `postgres_default`)
 - Use **Airflow Connections** to securely manage database credentials.
 - Implement **SQL transactions** using `try/except` for safe table merging.
 - Final table should **union** data from ETL and forecasting pipelines.
@@ -39,7 +38,8 @@ Both pipelines must be orchestrated and managed using **Apache Airflow** as two 
                          v
                 +----------------+
                 | Airflow DAG 1: |
-                |  yfinance_etl  |
+                | yf_stock_price
+             _full_refresh_180d  |
                 | (Extract,      |
                 |  Transform,    |
                 |   Load).       |
@@ -53,7 +53,7 @@ Both pipelines must be orchestrated and managed using **Apache Airflow** as two 
                          v
                 +----------------+
                 | Airflow DAG 2: |
-                | yfinance_train |
+                | dag_snowflake_ml_forecast_7d |
                 | (Forecast, Merge)|
                 +--------+-------+
                          |
@@ -67,13 +67,13 @@ Both pipelines must be orchestrated and managed using **Apache Airflow** as two 
 
 ## 🪶 Airflow DAGs Overview
 
-### 1️⃣ `yfinance_etl`
+### 1️⃣ `yf_stock_price_full_refresh_180d`
 - Fetches stock price data using the yfinance API.  
 - Loads the extracted dataset into a SQL database.  
-- Uses Airflow Variables (`stock_symbol`) and database connection (`database_conn_id`).  
+- Uses Airflow Variables (`stock_symbol`) and database connection (`snowflake_conn`).  
 - Scheduled to run **daily** (`schedule_interval='@daily'`).  
 
-### 2️⃣ `yfinance_train`
+### 2️⃣ `dag_snowflake_ml_forecast_7d`
 - Reads historical data from the database.  
 - Trains a machine learning model to forecast prices.  
 - Saves predicted results to the forecast table.  
@@ -84,8 +84,8 @@ Both pipelines must be orchestrated and managed using **Apache Airflow** as two 
 ## 📊 Airflow Web UI
 
 > Include a screenshot showing both DAGs running successfully:
-> - `yfinance_etl`
-> - `yfinance_train`
+> - `yf_stock_price_full_refresh_180d`
+> - `dag_snowflake_ml_forecast_7d`
 
 This confirms that both pipelines are correctly deployed and orchestrated within Airflow.
 
@@ -97,9 +97,9 @@ Include the following files in your repo:
 
 ```
 📂 LAB-1/
-│   ├── yfinance_etl.py
-│   ├── yfinance_train.py
-│   ├── StockPipeline_IEEE_Report.pdf
+│   ├── yf_stock_price_full_refresh_180d.py
+│   ├── dag_snowflake_ml_forecast_7d.py
+│   ├── Lab Report-Group 17.pdf
 ├── README.md
 ```
 

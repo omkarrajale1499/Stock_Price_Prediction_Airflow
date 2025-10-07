@@ -96,7 +96,7 @@ This confirms that both pipelines are correctly deployed and orchestrated within
 Include the following files in your repo:
 
 ```
-📂 LAB-1/
+📂 Stock_Price_Prediction_Airflow/
 │   ├── yf_stock_price_full_refresh_180d.py
 │   ├── dag_snowflake_ml_forecast_7d.py
 │   ├── Lab Report-Group 17.pdf
